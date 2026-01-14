@@ -6,14 +6,14 @@ import numpy as np
 from dempster_logic import dempster_rule
 from problems import hardware_sources, emergency_sources
 
-# Funcție pentru afișarea rezultatelor
+# ===== Funcție pentru afișare rezultate =====
 def show_result(label, result):
     text = ""
     for k, v in result.items():
         text += f"{set(k)} : {round(v,3)}\n"
     label.config(text=text)
 
-# Configurare fereastră principală
+# ===== Fereastra principală =====
 root = tk.Tk()
 root.title("Regula Dempster–Shafer (5 stări)")
 root.geometry("750x650")
@@ -21,7 +21,7 @@ root.geometry("750x650")
 tabs = ttk.Notebook(root)
 tabs.pack(expand=True, fill="both")
 
-# tab 1 – Diagnostic hardware
+# ================= TAB 1 – Diagnostic hardware =================
 tab_hw = ttk.Frame(tabs)
 tabs.add(tab_hw, text="Diagnostic hardware")
 
@@ -67,9 +67,9 @@ def add_hw_test():
         values = []
         for s in states:
             if isinstance(s, tuple):
-                values.append(round(res.get(set(s),0),3))
+                values.append(round(res.get(frozenset(s),0),3))
             else:
-                values.append(round(res.get(set({s}),0),3))
+                values.append(round(res.get(frozenset({s}),0),3))
 
         hw_test_list.insert(tk.END,
             f"DEF_ELECT={values[0]}, DEF_MECH={values[1]}, FUNC={values[2]}, UNC1={values[3]}, UNC2={values[4]}")
@@ -94,6 +94,7 @@ def plot_hw_tests():
     x = np.arange(len(states))
     width = 0.2
     plt.figure(figsize=(10,6))
+    colors = ['red','orange','green','blue','gray']
 
     for idx, test in enumerate(all_tests):
         plt.bar(x + idx*width, test, width, label=f'Test {idx+1}', alpha=0.7)
@@ -109,7 +110,7 @@ ttk.Button(tab_hw, text="Calculează un test", command=calc_hw).pack(pady=2)
 ttk.Button(tab_hw, text="Adaugă test în listă", command=add_hw_test).pack(pady=2)
 ttk.Button(tab_hw, text="Afișează grafic teste", command=plot_hw_tests).pack(pady=2)
 
-# tab 2 – Situație de urgență
+# ================= TAB 2 – Situație de urgență =================
 tab_em = ttk.Frame(tabs)
 tabs.add(tab_em, text="Situație de urgență")
 
@@ -155,9 +156,9 @@ def add_em_test():
         values = []
         for s in states:
             if isinstance(s, tuple):
-                values.append(round(res.get(set(s),0),3))
+                values.append(round(res.get(frozenset(s),0),3))
             else:
-                values.append(round(res.get(set({s}),0),3))
+                values.append(round(res.get(frozenset({s}),0),3))
 
         em_test_list.insert(tk.END,
             f"EM_FIRE={values[0]}, EM_HEAT={values[1]}, NORMAL={values[2]}, UNC1={values[3]}, UNC2={values[4]}")
